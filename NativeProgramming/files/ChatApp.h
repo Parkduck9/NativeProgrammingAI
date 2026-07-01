@@ -1,24 +1,36 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 #include "Message.h"
-#include "DummyChatModel.h"
+#include "IChatModel.h"
+#include "CommandHandler.h"
 
 class ChatApp {
 public:
+    // [배우는 개념: unique_ptr 이전 (move)]
+    // unique_ptr는 복사가 안 된다 — 소유권이 하나여야 하기 때문.
+    // std::move로 소유권을 ChatApp 안으로 넘긴다.
+    explicit ChatApp(std::unique_ptr<IChatModel> model);
+
     void run();
+
+    void clearHistory();
+    void printHistory() const;
+    void saveHistory(const std::string& path) const;
+    void loadHistory(const std::string& path);
 
 private:
     std::string readUserInput();
     void handleTurn(const std::string& userInput);
     bool isExitCommand(const std::string& input) const;
 
-    // [배우는 개념: vector<Message>]
-    // 크기를 미리 정하지 않아도 push_back()으로 자동으로 늘어나는 동적 배열.
     std::vector<Message> history_;
 
-    // [배우는 개념: 멤버로 직접 소유]
-    // 포인터 없이 값으로 들고 있으면 ChatApp이 소멸될 때 자동으로 정리된다.
-    // 나중에 모델을 교체해야 할 때 unique_ptr로 바꾸면 된다.
-    DummyChatModel model_;
+    // [배우는 개념: unique_ptr<IChatModel>]
+    // DummyChatModel이든 OllamaChatModel이든 IChatModel로만 다룬다.
+    // ChatApp은 안에 뭐가 들었는지 모른다 — 교체해도 이 파일은 안 바뀐다.
+    std::unique_ptr<IChatModel> model_;
+
+    CommandHandler commandHandler_;
 };

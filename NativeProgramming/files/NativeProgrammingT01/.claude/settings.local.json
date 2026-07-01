@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp\" -OutFile \"C:\\\\Users\\\\User\\\\Desktop\\\\NativeProgramming\\\\files\\\\json.hpp\")"
+    ]
+  }
+}
